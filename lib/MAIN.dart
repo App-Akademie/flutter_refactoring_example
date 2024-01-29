@@ -30,17 +30,18 @@ class BlgScr extends StatefulWidget {
 
 class _StateForBlgScren extends State<BlgScr> {
   addCommentFunction(int postId, String comment) async {
-    var urlToAddComment = 'https://jsonplaceholder.typicode.com/comments';
+    var urlToAddComment = 'https://dummyjson.com/comments';
     var res = await http.post(
       Uri.parse(urlToAddComment),
       headers: {"Content-Type": "application/json"},
       body: json.encode({"postId": postId, "body": comment}),
     );
     if (res.statusCode == 201) {
-      var urlAPI = 'https://jsonplaceholder.typicode.com/posts';
+      var urlAPI = 'https://dummyjson.com/posts';
       var responseFromServer = await http.get(Uri.parse(urlAPI));
       if (responseFromServer.statusCode == 200) {
         var dataFromServer = json.decode(responseFromServer.body);
+        dataFromServer = dataFromServer['posts'];
         setState(() {
           blogs = dataFromServer;
           doo = false;
@@ -62,11 +63,12 @@ class _StateForBlgScren extends State<BlgScr> {
   final TextEditingController controller6 = TextEditingController();
 
   ftch() async {
-    var urlApi = 'https://jsonplaceholder.typicode.com/posts';
+    var urlApi = 'https://dummyjson.com/posts';
     var responseFromServer = await http.get(Uri.parse(urlApi));
     if (responseFromServer.statusCode == 200) {
       var dataFromServer = json.decode(responseFromServer.body);
       setState(() {
+        dataFromServer = dataFromServer['posts'];
         blogs = dataFromServer;
         doo = false;
       });
@@ -85,18 +87,19 @@ class _StateForBlgScren extends State<BlgScr> {
   }
 
   add_post_function(String titleParam, String bodyParam) async {
-    var urlToAddPost = 'https://jsonplaceholder.typicode.com/posts';
+    var urlToAddPost = 'https://dummyjson.com/posts';
     var r = await http.post(
       Uri.parse(urlToAddPost),
       headers: {"Content-Type": "application/json"},
       body: json.encode({"title": titleParam, "body": bodyParam}),
     );
     if (r.statusCode == 201) {
-      var urlAPI = 'https://jsonplaceholder.typicode.com/posts';
+      var urlAPI = 'https://dummyjson.com/posts';
       var responseFromServer = await http.get(Uri.parse(urlAPI));
       if (responseFromServer.statusCode == 200) {
         var dataFromServer = json.decode(responseFromServer.body);
         setState(() {
+          dataFromServer = dataFromServer['posts'];
           blogs = dataFromServer;
           doo = false;
         });
@@ -125,7 +128,7 @@ class _StateForBlgScren extends State<BlgScr> {
   final TextEditingController ctrl2 = TextEditingController();
 
   UPDATE_POST_FUNCTION(int idParam, String titleParam, String bodyParam) async {
-    var urlToUpdatePost = 'https://jsonplaceholder.typicode.com/posts/$idParam';
+    var urlToUpdatePost = 'https://dummyjson.com/posts/$idParam';
     var res = await http.put(
       Uri.parse(urlToUpdatePost),
       headers: {"Content-Type": "application/json"},
@@ -133,11 +136,12 @@ class _StateForBlgScren extends State<BlgScr> {
           json.encode({"id": idParam, "title": titleParam, "body": bodyParam}),
     );
     if (res.statusCode == 200) {
-      var urlAPI = 'https://jsonplaceholder.typicode.com/posts';
+      var urlAPI = 'https://dummyjson.com/posts';
       var responseFromServer = await http.get(Uri.parse(urlAPI));
       if (responseFromServer.statusCode == 200) {
         var dataFromServer = json.decode(responseFromServer.body);
         setState(() {
+          dataFromServer = dataFromServer['posts'];
           blogs = dataFromServer;
           doo = false;
         });
@@ -452,7 +456,7 @@ class _StateForBlgScren extends State<BlgScr> {
   }
 
   DeletePostFunction(int idParam) async {
-    var urlToDeletePost = 'https://jsonplaceholder.typicode.com/posts/$idParam';
+    var urlToDeletePost = 'https://dummyjson.com/posts/$idParam';
     var r = await http.delete(Uri.parse(urlToDeletePost));
     if (r.statusCode == 200) {
       ftch();
@@ -470,7 +474,7 @@ class ScrPstDtl extends StatefulWidget {
 
 class _ScrPstDtlState extends State<ScrPstDtl> {
   addNewComment(String commentText) async {
-    var urlToAddComment = 'https://jsonplaceholder.typicode.com/comments';
+    var urlToAddComment = 'https://dummyjson.com/comments';
     var responseForAddComment = await http.post(
       Uri.parse(urlToAddComment),
       headers: {"Content-Type": "application/json"},
@@ -559,7 +563,7 @@ class _ScrPstDtlState extends State<ScrPstDtl> {
                           itemCount: comments.length,
                           itemBuilder: (context, idx) {
                             return MyWidget(
-                              name: comments[idx]['name'],
+                              name: comments[idx]['user']['username'],
                               body: comments[idx]['body'],
                             );
                           },
@@ -595,12 +599,12 @@ class _ScrPstDtlState extends State<ScrPstDtl> {
   }
 
   fetchComments() async {
-    var urlAPI =
-        'https://jsonplaceholder.typicode.com/posts/${widget.post['id']}/comments';
+    var urlAPI = 'https://dummyjson.com/posts/${widget.post['id']}/comments';
     var responseFromServer = await http.get(Uri.parse(urlAPI));
     if (responseFromServer.statusCode == 200) {
       var commentsData = json.decode(responseFromServer.body);
       setState(() {
+        commentsData = commentsData['comments'];
         comments = commentsData;
         isLoadingComments = false;
       });
